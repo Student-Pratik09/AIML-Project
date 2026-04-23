@@ -1,0 +1,38 @@
+Project name-Image Compression using PCA
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+from scipy.datasets import face
+
+
+img = face(gray=True)
+
+
+
+
+n_components = 50
+
+pca = PCA(n_components=n_components)
+img_transformed = pca.fit_transform(img)
+
+
+img_reconstructed = pca.inverse_transform(img_transformed)
+
+
+plt.figure(figsize=(12, 6))
+
+plt.subplot(1, 2, 1)
+plt.imshow(img, cmap='gray')
+plt.title(f'Original Image\nDimensions: {img.shape}')
+plt.axis('off')
+
+plt.subplot(1, 2, 2)
+plt.imshow(img_reconstructed, cmap='gray')
+plt.title(f'Compressed Image ({n_components} Components)\nDimensions: {img_transformed.shape}')
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
+
+variance_retained = np.sum(pca.explained_variance_ratio_) * 100
+print(f'Retained Variance with {n_components} components: {variance_retained:.2f}%')
