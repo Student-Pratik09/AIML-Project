@@ -1,0 +1,51 @@
+Project name-Diabetes Prediction using Logistic Regression
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
+
+
+np.random.seed(42)
+n_samples = 200
+glucose = np.random.normal(120, 30, n_samples)
+bmi = np.random.normal(30, 5, n_samples)
+age = np.random.randint(20, 80, n_samples)
+# Simple logic for outcome: high glucose and bmi increase risk
+prob = 1 / (1 + np.exp(-(0.05 * glucose + 0.1 * bmi - 10)))
+outcome = (prob > 0.5).astype(int)
+
+df_diabetes = pd.DataFrame({
+    'Glucose': glucose,
+    'BMI': bmi,
+    'Age': age,
+    'Outcome': outcome
+})
+
+
+X = df_diabetes[['Glucose', 'BMI', 'Age']]
+y = df_diabetes['Outcome']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+
+model = LogisticRegression()
+model.fit(X_train_scaled, y_train)
+
+
+y_pred = model.predict(X_test_scaled)
+
+print("Classification Report:")
+print(classification_report(y_test, y_pred))
+
+
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot(cmap='Blues')
+plt.title('Confusion Matrix for Diabetes Prediction')
+plt.show()
