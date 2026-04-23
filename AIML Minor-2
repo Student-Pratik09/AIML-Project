@@ -1,0 +1,29 @@
+Project name-ML-Based Addition Calculator
+from sklearn.linear_model import LinearRegression
+import numpy as np
+
+
+X_math = np.random.randint(0, 1000, size=(500, 2))
+y_math = X_math[:, 0] + X_math[:, 1]
+
+
+math_model = LinearRegression()
+math_model.fit(X_math, y_math)
+
+
+def ml_addition_calculator(num1, num2):
+    input_data = np.array([[num1, num2]])
+    prediction = math_model.predict(input_data)[0]
+
+    print(f'\n--- ML Calculator Result ---')
+    print(f'Input: {num1} + {num2}')
+    print(f'AI Predicted Sum: {prediction:.2f}')
+    print(f'Actual Sum: {num1 + num2}')
+
+
+try:
+    user_val1 = float(input("Enter the first number: "))
+    user_val2 = float(input("Enter the second number: "))
+    ml_addition_calculator(user_val1, user_val2)
+except ValueError:
+    print("Please enter valid numerical values.")
